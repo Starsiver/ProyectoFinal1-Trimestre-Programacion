@@ -1,0 +1,357 @@
+import java.util.Scanner;
+
+public class ProyectoProgramacion {
+    public static void main(String[] args) {
+        String[][] registro = new String[20][5];
+        String[][] farmacos = new String[20][4];  
+        String[][] horario  = new String[20][3]; 
+        String [][] prospectos = new String[20][3]; 
+        String opcion, dni = null;
+        boolean existe = false;
+        Scanner sc = new Scanner(System.in);
+
+        do {
+            System.out.println(" == Menú Principal ==");
+            System.out.println("1. Registrar usuario");
+            System.out.println("2. Registrar fármaco");
+            System.out.println("3. Prospectos de Fármacos");
+            System.out.println("4. Registro de Horario");
+            System.out.println("5. Salir");
+            opcion = sc.nextLine();
+
+            switch (opcion) {
+                case "1":
+                    datosRegistro(sc, registro, opcion, dni, existe);
+                    break;
+
+                case "2":
+                        registroFarmaco(sc, registro, farmacos, existe, dni, opcion);
+                        break;
+                case "3":
+                    prospectosFarmacos(farmacos, dni, existe, prospectos, registro, sc, opcion);
+                    break;
+
+                case "4":
+                    System.out.println("Ingrese su DNI: ");
+                    dni = sc.nextLine();
+                    existe = false;
+                    for (int i = 0; i < registro.length; i++) {
+                        if (registro[i][2] != null && registro[i][2].equals(dni)) {
+                            existe = true;
+                            break;
+                        }
+                    }
+                    if (!existe) {
+                        System.out.println("Paciente no encontrado");
+                        break;
+                    }
+
+                    System.out.println("== Menú de Horario ==");
+                    System.out.println("1. Registrar horario");
+                    System.out.println("2. Ver horario");
+                    System.out.println("3. Salir");
+                    String opcionHorario = sc.nextLine();
+
+                    switch (opcionHorario) {
+                        case "1": 
+                            registroHorario(sc, registro, horario);
+                            break;
+                        case "2": 
+                            verHorario(horario);
+                            break;
+                        case "3":
+                            System.out.println("Saliendo del menu de horario....");
+                            break;
+                        default:
+                            System.out.println("Opcion no valida");
+                    }
+                    break;
+
+                case "5":
+                    System.out.println("Saliendo del programa....");
+                    break;
+
+                default:
+                    System.out.println("Opcion no valida");
+            }
+        } while (!opcion.equals("5"));
+
+    }
+
+   public static void datosRegistro(Scanner sc, String [][] registro, String opcion, String dni,  boolean existe) {
+        System.out.println("== MENU ==");
+        System.out.println("1.Iniciar sesion");
+        System.out.println("2.Registar nuevo usuario");
+        System.out.println("3.salir");
+        opcion = sc.nextLine();
+
+        switch (opcion) {
+            case "1":
+                System.out.println("Ingrese su DNI: ");
+                dni = sc.nextLine();
+                existe = false;
+                for (int i = 0; i < registro.length; i++) {
+                    if (registro[i][2] != null && registro[i][2].equals(dni)) {
+                    existe = true;
+                    break;
+                }
+            }
+            if (!existe) {
+                System.out.println("Usuario no encontrado");
+                break;
+            } else {
+                System.out.println("Inicio de sesion exitoso");
+            }
+            break;
+            case "2":
+                for (int i = 0; i < registro.length; i++) {
+                    if (registro[i][0] == null) {
+                        System.out.println("Ingrese el nombre: ");
+                        registro[i][0] = sc.nextLine();
+                        System.out.println("Ingrese el apellido: ");
+                        registro[i][1] = sc.nextLine();
+                        System.out.println("Ingrese el DNI: ");
+                        dni = sc.nextLine();
+                        boolean dniValido = comprobarDni(dni);
+                    if (!dniValido) {
+                        System.out.println("DNI no valido");
+                        break;
+                    }
+                    registro[i][2] = dni;
+                    System.out.println("Ingrese la edad: ");
+                    registro[i][3] = sc.nextLine();
+                    System.out.println("Ingrese el telefono: ");
+                    registro[i][4] = sc.nextLine();
+                    System.out.println("Datos registrados correctamente.");
+                    break;
+                    }
+                }
+
+            case "3":
+                System.out.println("Saliendo del menu de registro....");
+                break;
+            default:
+                System.out.println("Opcion no valida");
+                break;
+        }
+    }
+
+
+    public static String registroFarmaco(Scanner sc, String [][] registro, String [][] farmacos, boolean existe, String dni, String opcion) {
+    existe = false;
+    System.out.println("Ingrese su DNI: ");
+    dni = sc.nextLine();
+    existe = false;
+    for (int i = 0; i < registro.length; i++) {
+        if (registro[i][2] != null && registro[i][2].equals(dni)) {
+            existe = true;
+            break;
+        }
+    }
+    if (!existe) {
+        System.out.println("Usuario no encontrado");
+        return dni; 
+    }
+
+    System.out.println("== Menu de Registro de Farmacos ==");
+    System.out.println("1.Registrar farmaco");
+    System.out.println("2.Lista de farmacos registrados");
+    System.out.println("3.Salir");
+    opcion = sc.nextLine(); 
+    switch (opcion) {
+
+        case "1":
+            for (int j = 0; j < farmacos.length; j++) {
+                if (farmacos[j][0] == null) {
+                    System.out.println("Ingrese el nombre del farmaco: ");
+                    farmacos[j][0] = sc.nextLine();
+                    System.out.println("Ingrese la dosis: ");
+                    farmacos[j][1] = sc.nextLine();
+                    System.out.println("Ingrese la frecuencia: ");
+                    farmacos[j][2] = sc.nextLine();
+                    farmacos[j][3] = dni;
+                    break;
+                }
+            }
+            break; 
+
+        case "2":
+            for (int j = 0; j < farmacos.length; j++) {
+                if (farmacos[j][0] != null) {
+                    System.out.println("Nombre: " + farmacos[j][0]);
+                    System.out.println("Dosis: " + farmacos[j][1]);
+                    System.out.println("Frecuencia: " + farmacos[j][2]);
+                }
+            }
+            break; 
+        case "3":
+            System.out.println("Saliendo del menu de registro de farmacos....");
+            break;
+        default:
+            System.out.println("Opcion incorresta");
+    }
+
+    return dni;
+}
+    
+    public static void prospectosFarmacos(String [][] registro, String dni, boolean existe, String [][] farmacos, String [][] prospectos, Scanner sc, String opcion) {
+        System.out.println("Ingrese su DNI: ");
+                    dni = sc.nextLine();
+                    existe = false;
+                    for (int i = 0; i < registro.length; i++) {
+                        if (registro[i][2] != null && registro[i][2].equals(dni)) {
+                            existe = true;
+                            break;
+                        }
+                    }
+                    if (!existe) {
+                        System.out.println("Usuario no encontrado");
+                    }
+
+
+            System.out.println("== Menu de Prospecto==");
+            System.out.println("1. Ibuprofeno");
+            System.out.println("2. Paracetamol");
+            System.out.println("3. Loperamid");
+            System.out.println("4. Omeprazol");
+            System.out.println("5. Salbutamol");
+            System.out.println("6. Enalapril");
+            System.out.println("7. Levotiroxina");
+            System.out.println("8. Lorazepam");
+            System.out.println("0. Salir");
+            opcion= sc.nextLine();
+            switch (opcion) {
+                case "1":
+                    System.out.println("Prospecto de Ibuprofeno");
+                    System.out.println("El ibuprofeno es un medicamento antiinflamatorio no esteroideo (AINE) que se utiliza para aliviar el dolor, reducir la inflamación y bajar la fiebre. Se puede usar para tratar dolores de cabeza, dolores musculares, artritis, dolor menstrual y otras afecciones inflamatorias.");
+                    System.out.println("Efectos secundarios");
+                    System.out.println("Molestias de estómago, náuseas, acidez; raramente úlcera o problemas renales");
+                    System.out.println("Pauta habitual (adulto)");
+                    System.out.println("400 mg | cada 6-8 horas con comida | Máx. 1.200 mg/día sin receta.");
+                    break;
+                case "2":
+                    System.out.println("Prospecto de Paracetamol");
+                    System.out.println("El paracetamol es un analgésico y antipirético que se utiliza para aliviar el dolor y reducir la fiebre. Es eficaz para tratar dolores leves a moderados, como dolores de cabeza, dolores musculares, dolor de espalda y fiebre.");
+                    System.out.println("Bien tolerado; en sobredosis daña el hígado");
+                    System.out.println("Pauta habitual (adulto)");
+                    System.out.println("500-1.000 mg | cada 6-8 horas (mínimo 4-6 h entre tomas) |Máx. 3-4 g/día.");
+                    break;
+                case "3":
+                    System.out.println("Prospecto de Loperamid");
+                    System.out.println("El loperamida es un medicamento utilizado para tratar la diarrea. Actúa disminuyendo la motilidad intestinal, lo que ayuda a reducir la frecuencia de las deposiciones y mejorar la consistencia de las heces.");
+                    System.out.println("Efectos secundarios");
+                    System.out.println("Molestias de estómago, náuseas, acidez; raramente úlcera o problemas renales");
+                    System.out.println("Pauta habitual (adulto)");
+                    System.out.println("2 mg | cada 8-12 horas | Máx. 16 mg/día.");
+                    break;
+                case "4":
+                    System.out.println("Prospecto de Omeprazol");
+                    System.out.println("El omeprazol es un inhibidor de la bomba de protones que se utiliza para tratar problemas relacionados con el exceso de ácido en el estómago, como la enfermedad por reflujo gastroesofágico (ERGE), úlceras gástricas y duodenales.");
+                    System.out.println("Efectos secundarios");
+                    System.out.println("Dolor de cabeza, náuseas, vómitos, diarrea; raramente efectos sobre el hígado o los riñones");
+                    System.out.println("Pauta habitual (adulto)");
+                    System.out.println("20 mg | una vez al día por 4-8 semanas | Máx. 40 mg/día.");
+                    break;
+                case "5":
+                    System.out.println("Prospecto de Salbutamol");
+                    System.out.println("El salbutamol es un broncodilatador que se utiliza para tratar el asma y otras enfermedades respiratorias. Ayuda a relajar los músculos de las vías respiratorias, facilitando la respiración.");
+                    System.out.println("Efectos secundarios");
+                    System.out.println("Temblor, nerviosismo, palpitaciones; raramente efectos sobre el corazón o los riñones");
+                    System.out.println("Pauta habitual (adulto)");  
+                    System.out.println("1-2 inhalaciones | cada 4-6 horas");
+                    break;
+                case "6":
+                    System.out.println("Prospecto de Enalapril");
+                    System.out.println("El enalapril es un inhibidor de la enzima convertidora de angiotensina (IECA) que se utiliza para tratar la hipertensión arterial y la insuficiencia cardíaca. Ayuda a relajar los vasos sanguíneos y mejorar el flujo sanguíneo.");
+                    System.out.println("Efectos secundarios");
+                    System.out.println("Mareos, tos seca, fatiga; raramente problemas renales o angioedema");
+                    System.out.println("Pauta habitual (adulto)");
+                    System.out.println("Normalmente una vez al día, a la misma hora, a diario y sin saltarse días.");
+                    break;
+                case "7":
+                    System.out.println("Prospecto de Levotiroxina");
+                    System.out.println("La levotiroxina es una hormona tiroidea sintética que se utiliza para tratar el hipotiroidismo, una condición en la que la glándula tiroides no produce suficiente hormona tiroidea. Ayuda a normalizar los niveles hormonales y mejorar el metabolismo.");
+                    System.out.println("Efectos secundarios");
+                    System.out.println("Aumento del ritmo cardíaco, sudoración, temblor; raramente efectos sobre el corazón o los riñones");
+                    System.out.println("Pauta habitual (adulto)");
+                    System.out.println("Una vez al día, en ayunas, 30-60 minutos antes del desayuno");
+                    break;
+                case "8":
+                    System.out.println("Prospecto de Lorazepam");
+                    System.out.println("La lorazepam es un ansiolítico del grupo de los benzodiazepinas que se utiliza para tratar la ansiedad y el insomnio. Ayuda a reducir la actividad del sistema nervioso central.");
+                    System.out.println("Efectos secundarios");
+                    System.out.println("Somnolencia, mareo, debilidad; raramente efectos sobre el corazón o los riñones");
+                    System.out.println("Pauta habitual (adulto)");
+                    System.out.println(" 1-3 tomas al día o por la noche | Uso corto (unas semanas) y sin dejarlo de golpe.");
+                    break;
+                case "0":
+                    System.out.println("Saliendo del menu de prospectos....");
+                    break;  
+                default:
+                    System.out.println("Opcion no valida");
+            
+        }
+        }
+        
+
+    public static void registroHorario(Scanner sc, String [][] registro, String [][] horario) {
+        for (int i = 0; i < horario.length; i++) {
+            if (horario[i][0] == null) {
+                System.out.println("Ingrese el nombre del Farmaco: ");
+                horario[i][0] = sc.nextLine();
+                System.out.println("Introduce la frecuencia de la toma: ");
+                horario[i][1] = sc.nextLine();
+                System.out.println("Introduce los días de la toma: ");
+                horario[i][2] = sc.nextLine();
+                break;  
+            }
+            System.out.println("Horario registrado correctamente.");
+        }
+    }
+    public static void verHorario(String [][] horario) {
+        for (int i = 0; i < horario.length; i++) {
+            if (horario[i][0] != null) {
+                for (int j = 0; j < horario[i].length; j++) {
+                    System.out.print(horario[i][j] + " ");
+                }
+                System.out.println();
+            }
+        }
+    }
+
+    public static boolean comprobarDni(String dniAComprobar) {
+        char[] letraDni = {
+            'T', 'R', 'W', 'A', 'G', 'M', 'Y', 'F', 'P', 'D',  'X',  'B', 'N', 'J', 'Z', 'S', 'Q', 'V', 'H', 'L', 'C', 'K', 'E'
+        };  
+        String num =  "";
+        int ind = 0;  
+        boolean valido = true;
+        if (dniAComprobar.length() == 9) {        
+            if(dniAComprobar.length() == 8) {
+                    dniAComprobar = "0" + dniAComprobar;     
+            }
+            if (!Character.isLetter(dniAComprobar.charAt(8))) {
+                valido = false; 
+            }
+            if (dniAComprobar.length() != 9){   
+                valido = false;
+            }  
+            for (int i = 0; i < 8; i++) {
+                if(!Character.isDigit(dniAComprobar.charAt(i))){
+                    valido = false;    
+                }
+                num += dniAComprobar.charAt(i);     
+            }
+            ind = Integer.parseInt(num);
+            ind %= 23;
+            if ((Character.toUpperCase(dniAComprobar.charAt(8))) != letraDni[ind]){
+                valido = false;
+            }
+        }
+        else {
+            System.out.println("El DNI debe contener 8 numeros y 1 letra.");
+            valido = false;
+        }
+        return valido;
+	}
+}     
